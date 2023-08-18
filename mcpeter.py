@@ -1,40 +1,52 @@
 import random as r
 import os
 
-def play():
-	pround = 1
-	while pround <= 20:
+def playRound():
+	# Wurfzähler
+	flip_cnt = 1
+	while True:
+		# Münzwurf: Kopf / Zahl
 		coin = r.choice(['heads','tails'])
-		#~print('\t',pround,coin)
-		if coin == 'heads':
-			pround += 1
+		# Zahl? - Ein neuer Wurf
+		if coin == 'tails':
+			flip_cnt += 1
+		# Kopf? - Gewinn: 2^[Anzahl der Münzwürfe]
 		else:
-			return 2**pround
-	return 2**20
+			return 2**flip_cnt
 
 if __name__=="__main__":
 	
-	BET = 25
+	# Teilnahmegebühr
+	BET = 100
+	# Gewinnziel
+	GOAL = 1_000_000
+	# Startkapital
+	PURSE = 0
 	
-	iterations = 10000000
-	total_win = 0
+	min_purse = 0
 	max_win = 0
-	cnt_win = 0
-	for i in range(0,iterations):
-		if i%10000 == 0:
-			os.system('clear')
-			print(round(i/iterations,2))
-		#~print('Iteration',i+1)
-		win = play()
-		if win > BET:
-			cnt_win += 1
-		max_win = max(max_win,win)
-		#~print('\t\t',win)
-		total_win += win
-	print('Bet:',BET)
-	#~print('Max win:',max_win)
-	#~print('Total win:',total_win)
-	#~print('Total bank:',BET*iterations-total_win)
-	print('Average win:',total_win/iterations)
-	print('Average bank:',(BET*iterations-total_win)/iterations)
-	print('Winning rounds:',cnt_win/iterations)
+	round_count = 0
+	
+	while PURSE < GOAL:
+		PURSE -= BET
+		min_purse = min(PURSE, min_purse)
+		round_count += 1
+		
+		# ~ if round_count%10000 == 0:
+			# ~ os.system('clear')
+			# ~ print('Runde:',f'{round_count:,}')
+		
+		win = playRound()
+		PURSE += win
+		max_win = max(win, max_win)
+		
+	# ~ os.system('clear')
+	
+	print('Teilnahmegebühr:       ',f'{BET: >15,}','€')
+	print('Gewinnziel:            ',f'{GOAL: >15,}','€')
+	print('-'*41)
+	print('Runden:                ',f'{round_count: >15,}')
+	print('Gewinn:                ',f'{PURSE: >15,}','€')
+	print('-'*41)
+	print('Beste Runde:           ',f'{max_win: >15,}','€')
+	print('Niedrigster Kontostand:',f'{min_purse: >15,}','€')
