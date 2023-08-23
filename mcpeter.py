@@ -17,7 +17,7 @@ def playRound():
 if __name__=="__main__":
 	
 	# Teilnahmegebühr
-	BET = 100
+	BET = 50
 	# Gewinnziel
 	GOAL = 1_000_000
 	# Startkapital
@@ -29,18 +29,19 @@ if __name__=="__main__":
 	
 	while PURSE < GOAL:
 		PURSE -= BET
-		min_purse = min(PURSE, min_purse)
 		round_count += 1
 		
-		# ~ if round_count%10000 == 0:
-			# ~ os.system('clear')
-			# ~ print('Runde:',f'{round_count:,}')
+		if round_count%1_000_000 == 0:
+			os.system('clear')
+			print('Runde:',f'{round_count:,}')
+			print('Schulden:',f'{-1*min_purse:,}')
 		
 		win = playRound()
 		PURSE += win
+		min_purse = min(PURSE, min_purse)
 		max_win = max(win, max_win)
 		
-	# ~ os.system('clear')
+	os.system('clear')
 	
 	print('Teilnahmegebühr:       ',f'{BET: >15,}','€')
 	print('Gewinnziel:            ',f'{GOAL: >15,}','€')
